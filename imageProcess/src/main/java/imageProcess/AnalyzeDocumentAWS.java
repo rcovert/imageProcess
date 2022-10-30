@@ -30,6 +30,7 @@ public class AnalyzeDocumentAWS {
 		// Call AnalyzeDocument	
 		InputStream sourceStream;
 		SdkBytes sourceBytes = null;
+		// commit changes
 		try {
 			sourceStream = new FileInputStream(theFile);
 			sourceBytes = SdkBytes.fromInputStream(sourceStream);
