@@ -26,7 +26,7 @@ public class AnalyzeDocumentAWS {
 	}
 
 
-	public void doAnalysis(File theFile) {
+	public List<Block> doAnalysis(File theFile) {
 		// Call AnalyzeDocument	
 		InputStream sourceStream;
 		SdkBytes sourceBytes = null;
@@ -62,18 +62,19 @@ public class AnalyzeDocumentAWS {
         
         AnalyzeDocumentResponse analyzeDocument = textractClient.analyzeDocument(analyzeDocumentRequest);
         List<Block> docInfo = analyzeDocument.blocks();
-        Iterator<Block> blockIterator = docInfo.iterator();
-        
-        int ij = 0;
-
-        while(blockIterator.hasNext()) {
-            Block block = blockIterator.next();
-            System.out.println(++ij +" The block type is " +block.blockType().toString());
-            System.out.println("Confidence: " + block.confidence());
-            System.out.println("Text: " + block.text());
-        }
+//        Iterator<Block> blockIterator = docInfo.iterator();
+//        
+//        int ij = 0;
+//
+//        while(blockIterator.hasNext()) {
+//            Block block = blockIterator.next();
+//            System.out.println(++ij +" The block type is " +block.blockType().toString());
+//            System.out.println("Confidence: " + block.confidence());
+//            System.out.println("Text: " + block.text());
+//        }
         
         textractClient.close();
+		return docInfo;
 
 	}
 	

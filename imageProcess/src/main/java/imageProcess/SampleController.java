@@ -6,41 +6,52 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.scene.Scene;
+import software.amazon.awssdk.services.textract.model.Block;
 
 public class SampleController {
 
-    @FXML
-    private ResourceBundle resources;
-    
-    @FXML
-    private Button extractA;
+	@FXML
+	private ResourceBundle resources;
 
-    @FXML
-    private URL location;
+	@FXML
+	private Button extractA;
 
-    @FXML
-    private ImageView imageView;
+	@FXML
+    private ListView<String> theList;
 
-    @FXML
-    private Button zoomIn;
+	@FXML
+	private URL location;
 
-    @FXML
-    private Button zoomOut;
-    
-    @FXML
-    private MenuItem openFile;
-    
-    public double getTheWidth() {
+	@FXML
+	private ImageView imageView;
+
+	@FXML
+	private Button zoomIn;
+
+	@FXML
+	private Button zoomOut;
+
+	@FXML
+	private MenuItem openFile;
+
+	public double getTheWidth() {
 		return theWidth;
 	}
 
@@ -57,46 +68,46 @@ public class SampleController {
 	}
 
 	private double theWidth;
-    private double theHeight;
-    
-    private String theBase64;
-    private ByteBuffer bb;
+	private double theHeight;
 
-    private File theFile;
+	private File theFile;
+	private List<Block> myList;
+	
+	public ObservableList<String> items = FXCollections.observableArrayList();
 
 	@FXML
-    void doZoomIn(ActionEvent event) {
-    	//System.out.println("imageview: " + imageView.computeAreaInScreen());
-    	//System.out.println("image: " + imageView.getImage());
-    	
-    	double iHeight = this.getTheHeight();
-    	double iWidth = this.getTheWidth();
-    	double newHeight = iHeight * 1.20;
-    	double newWidth = iWidth * 1.20;
-    	imageView.setFitHeight(newHeight);
-    	imageView.setFitWidth(newWidth);
-    	this.setTheHeight(newHeight);
-    	this.setTheWidth(newWidth);
-    }
+	void doZoomIn(ActionEvent event) {
+		// System.out.println("imageview: " + imageView.computeAreaInScreen());
+		// System.out.println("image: " + imageView.getImage());
 
-    @FXML
-    void doZoomOut(ActionEvent event) {
-    	double iHeight = this.getTheHeight();
-    	double iWidth = this.getTheWidth();
-    	double newHeight = iHeight * .80;
-    	double newWidth = iWidth * .80;
-    	imageView.setFitHeight(newHeight);
-    	imageView.setFitWidth(newWidth);
-    	this.setTheHeight(newHeight);
-    	this.setTheWidth(newWidth);
-    }
-    
-    @FXML
-    void doOpenFile(ActionEvent event) {
-    	FileChooser fileChooser = new FileChooser();
-    	fileChooser.setTitle("Open Resource File");
-    	theFile = fileChooser.showOpenDialog(null);
-    	FileInputStream inputstream;
+		double iHeight = this.getTheHeight();
+		double iWidth = this.getTheWidth();
+		double newHeight = iHeight * 1.20;
+		double newWidth = iWidth * 1.20;
+		imageView.setFitHeight(newHeight);
+		imageView.setFitWidth(newWidth);
+		this.setTheHeight(newHeight);
+		this.setTheWidth(newWidth);
+	}
+
+	@FXML
+	void doZoomOut(ActionEvent event) {
+		double iHeight = this.getTheHeight();
+		double iWidth = this.getTheWidth();
+		double newHeight = iHeight * .80;
+		double newWidth = iWidth * .80;
+		imageView.setFitHeight(newHeight);
+		imageView.setFitWidth(newWidth);
+		this.setTheHeight(newHeight);
+		this.setTheWidth(newWidth);
+	}
+
+	@FXML
+	void doOpenFile(ActionEvent event) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Resource File");
+		theFile = fileChooser.showOpenDialog(null);
+		FileInputStream inputstream;
 		try {
 			inputstream = new FileInputStream(theFile);
 			int theSize = inputstream.available();
@@ -104,11 +115,10 @@ public class SampleController {
 			byte[] theBytes = new byte[theSize];
 			inputstream.read(theBytes);
 			// now read the inputstream into the byte array and encode
-			//byte[] encoded = Base64.getEncoder().encode(theBytes);
-			//theBase64 = new String(encoded);
+			// byte[] encoded = Base64.getEncoder().encode(theBytes);
+			// theBase64 = new String(encoded);
 			// aws just uses unencoded byte buffer / no need to encode
 
-			
 			// close and reopen the stream to get back to start
 			inputstream.close();
 			inputstream = new FileInputStream(theFile);
@@ -116,38 +126,55 @@ public class SampleController {
 			Image image = new Image(inputstream);
 			imageView.setImage(image);
 			inputstream.close();
-			
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		
+		}
+
 		double iHeight = imageView.getImage().getHeight();
-    	double iWidth = imageView.getImage().getWidth();
-    	this.setTheHeight(iHeight);
-    	this.setTheWidth(iWidth);
-    	//System.out.println(iHeight);
-    	//System.out.println(iWidth);
-    	//System.out.println("base:  " + theBase64);
+		double iWidth = imageView.getImage().getWidth();
+		this.setTheHeight(iHeight);
+		this.setTheWidth(iWidth);
+		// System.out.println(iHeight);
+		// System.out.println(iWidth);
+		// System.out.println("base: " + theBase64);
 
-    }
-    
-    @FXML
-    void doExtractA(ActionEvent event) {
-    	// get analysis object
-    	AnalyzeDocumentAWS ada = new AnalyzeDocumentAWS();
-    	ada.doAnalysis(theFile);
-    }
+	}
 
-    @FXML
-    void initialize() {
-        assert imageView != null : "fx:id=\"imageView\" was not injected: check your FXML file 'FinalScene.fxml'.";
-        assert zoomIn != null : "fx:id=\"zoomIn\" was not injected: check your FXML file 'FinalScene.fxml'.";
-        assert zoomOut != null : "fx:id=\"zoomOut\" was not injected: check your FXML file 'FinalScene.fxml'.";
-        System.out.println("Initialized");      
-    }
+	@FXML
+	void doExtractA(ActionEvent event) {
+		// get analysis object
+		AnalyzeDocumentAWS ada = new AnalyzeDocumentAWS();
+		myList = ada.doAnalysis(theFile);
+		// ListView<String> theList = new ListView<String>();
+		Iterator<Block> blockIterator = myList.iterator();
+
+		int ij = 0;
+		String theString = null;
+		
+
+		while (blockIterator.hasNext()) {
+			Block block = blockIterator.next();
+			//System.out.println(++ij + " The block type is " + block.blockType().toString());
+			//System.out.println("Confidence: " + block.confidence());
+			//System.out.println("Text: " + block.text());
+			theString = block.text();
+			items.add(theString);
+		}
+		
+		theList.setItems(items);
+	}
+
+	@FXML
+	void initialize() {
+		assert imageView != null : "fx:id=\"imageView\" was not injected: check your FXML file 'FinalScene.fxml'.";
+		assert zoomIn != null : "fx:id=\"zoomIn\" was not injected: check your FXML file 'FinalScene.fxml'.";
+		assert zoomOut != null : "fx:id=\"zoomOut\" was not injected: check your FXML file 'FinalScene.fxml'.";
+		System.out.println("Initialized");
+	}
 
 }
