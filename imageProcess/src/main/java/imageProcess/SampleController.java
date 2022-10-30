@@ -138,8 +138,8 @@ public class SampleController {
     @FXML
     void doExtractA(ActionEvent event) {
     	// get analysis object
-    	//AnalyzeDocumentAWS ada = new AnalyzeDocumentAWS();
-    	//ada.doAnalysis(theFile);
+    	AnalyzeDocumentAWS ada = new AnalyzeDocumentAWS();
+    	ada.doAnalysis(theFile);
     }
 
     @FXML
