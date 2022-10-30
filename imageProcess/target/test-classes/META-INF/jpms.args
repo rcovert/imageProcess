@@ -1,0 +1,4 @@
+--patch-module
+imageProcess=_
+--add-reads
+imageProcess=ALL-UNNAMED
