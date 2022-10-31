@@ -109,18 +109,18 @@ public class SampleController {
 		theFile = fileChooser.showOpenDialog(null);
 		FileInputStream inputstream;
 		try {
-			inputstream = new FileInputStream(theFile);
-			int theSize = inputstream.available();
-			System.out.println("the size: " + theSize);
-			byte[] theBytes = new byte[theSize];
-			inputstream.read(theBytes);
+			//inputstream = new FileInputStream(theFile);
+			//int theSize = inputstream.available();
+			//System.out.println("the size: " + theSize);
+			//byte[] theBytes = new byte[theSize];
+			//inputstream.read(theBytes);
 			// now read the inputstream into the byte array and encode
 			// byte[] encoded = Base64.getEncoder().encode(theBytes);
 			// theBase64 = new String(encoded);
 			// aws just uses unencoded byte buffer / no need to encode
 
 			// close and reopen the stream to get back to start
-			inputstream.close();
+			//inputstream.close();
 			inputstream = new FileInputStream(theFile);
 			// now put the image into the imageview
 			Image image = new Image(inputstream);
@@ -150,13 +150,12 @@ public class SampleController {
 		// get analysis object
 		AnalyzeDocumentAWS ada = new AnalyzeDocumentAWS();
 		myList = ada.doAnalysis(theFile);
-		// ListView<String> theList = new ListView<String>();
+		
 		Iterator<Block> blockIterator = myList.iterator();
 
 		int ij = 0;
 		String theString = null;
 		
-
 		while (blockIterator.hasNext()) {
 			Block block = blockIterator.next();
 			//System.out.println(++ij + " The block type is " + block.blockType().toString());
