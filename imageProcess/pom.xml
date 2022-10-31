@@ -27,6 +27,13 @@
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>s3</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.gluonhq/charm-glisten -->
+		<dependency>
+			<groupId>com.gluonhq</groupId>
+			<artifactId>charm-glisten</artifactId>
+			<version>6.2.2</version>
+		</dependency>
+
 		<!-- Thanks for using https://jar-download.com -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

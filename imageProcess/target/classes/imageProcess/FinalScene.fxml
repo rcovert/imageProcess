@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.gluonhq.charm.glisten.control.ProgressBar?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
@@ -92,5 +93,6 @@
             <Button fx:id="extractA" mnemonicParsing="false" onAction="#doExtractA" text="ExtractA" />
          </children>
       </HBox>
+      <ProgressBar layoutX="414.0" layoutY="47.0" prefWidth="200.0" progress="0.0" />
    </children>
 </AnchorPane>
