@@ -104,23 +104,18 @@ public class SampleController {
 
 	@FXML
 	void doOpenFile(ActionEvent event) {
+		// delete the current view and table before loading new one
+		imageView.setImage(null);
+		
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Resource File");
 		theFile = fileChooser.showOpenDialog(null);
 		FileInputStream inputstream;
 		try {
-			//inputstream = new FileInputStream(theFile);
-			//int theSize = inputstream.available();
-			//System.out.println("the size: " + theSize);
-			//byte[] theBytes = new byte[theSize];
-			//inputstream.read(theBytes);
-			// now read the inputstream into the byte array and encode
-			// byte[] encoded = Base64.getEncoder().encode(theBytes);
 			// theBase64 = new String(encoded);
 			// aws just uses unencoded byte buffer / no need to encode
 
 			// close and reopen the stream to get back to start
-			//inputstream.close();
 			inputstream = new FileInputStream(theFile);
 			// now put the image into the imageview
 			Image image = new Image(inputstream);
@@ -139,9 +134,8 @@ public class SampleController {
 		double iWidth = imageView.getImage().getWidth();
 		this.setTheHeight(iHeight);
 		this.setTheWidth(iWidth);
-		// System.out.println(iHeight);
-		// System.out.println(iWidth);
-		// System.out.println("base: " + theBase64);
+		// now clear the items list
+		items.remove(0, items.size());
 
 	}
 
